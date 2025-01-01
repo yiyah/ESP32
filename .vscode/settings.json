@@ -2,8 +2,7 @@
     "C_Cpp.intelliSenseEngine": "default",
     "idf.espIdfPath": "/Users/yiya/tools/esp512/v5.1.2/esp-idf",
     "idf.openOcdConfigs": [
-        "interface/ftdi/esp32_devkitj_v1.cfg",
-        "target/esp32s3.cfg"
+        "board/esp32s3-bridge.cfg"
     ],
     "idf.port": "/dev/tty.debug-console",
     "idf.toolsPath": "/Users/yiya/tools/esp512/.espressif"
