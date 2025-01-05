@@ -1,5 +1,4 @@
 #include "driver/gpio.h"
-#include "esp_log.h"
 #include "../iic/iic.h"
 #include "xl9555.h"
 
@@ -16,75 +15,118 @@
 #define XL9555_INVERSION_PORT1_REG      (5U)      /* 极性反转寄存器1地址 */
 #define XL9555_CONFIG_PORT0_REG         (6U)      /* 方向配置寄存器0地址 */
 #define XL9555_CONFIG_PORT1_REG         (7U)      /* 方向配置寄存器1地址 */
+#define XL9555_POFT0_REG_MASK           ((uint16_t)0xFF)    /* 寄存器0的掩码 */
+#define XL9555_POFT1_REG_MASK           ((uint16_t)0xFF00)  /* 寄存器1的掩码 */
 
 /**
- * @brief 
+ * @brief Set the pin state
+ * @usage XL9555_Write_pin(IO_07_MASK|IO_17_MASK, 0);
  * 
  * @param pin 
  * @param state 
  *      @arg 0: low level
  *      @arg 1: high level
  */
-void XL9555_Write_pin(uint16_t pin, uint8_t state)
+void XL9555_Write_pin(uint16_t pin_mask, uint8_t state)
 {
-    uint8_t pins_state = 0x0;
-    uint8_t reg = 0x0;
+    uint8_t port_state[2] = {0};
 
-    reg = (pin & IO_IN_HIG_REG_MASK)
-          ? XL9555_OUTPUT_PORT1_REG
-          : XL9555_OUTPUT_PORT0_REG;
     IIC_Read_Bytes(I2C_NUM_0,
-                   XL9555_IIC_ADDR, reg,
-                   &pins_state, 1);
+                XL9555_IIC_ADDR, XL9555_OUTPUT_PORT0_REG,
+                port_state, 2);
 
-    pins_state = (0 == state)
-                 ? pins_state & ~(pin & 0xFF)
-                 : pins_state | (pin & 0xFF);
+    if (pin_mask & XL9555_POFT0_REG_MASK)
+    {
+        port_state[0] = (0 == state)
+                        ? port_state[0] & ~(pin_mask & 0xFF)
+                        : port_state[0] | (pin_mask & 0xFF);
+    }
+
+    if (pin_mask & XL9555_POFT1_REG_MASK)
+    {
+        pin_mask >>= 8;
+
+        port_state[1] = (0 == state)
+                        ? port_state[1] & ~(pin_mask & 0xFF)
+                        : port_state[1] | (pin_mask & 0xFF);
+    }
+
     IIC_Write_Bytes(I2C_NUM_0,
-                    XL9555_IIC_ADDR, reg,
-                    &pins_state, 1);
+                XL9555_IIC_ADDR, XL9555_OUTPUT_PORT0_REG,
+                port_state, 2);
 }
 
-uint8_t XL9555_Read_pin(uint16_t pin)
+
+/**
+ * @brief Read the state of the pin
+ * 
+ * @param pin_mask Only one bit can be set
+ * @return uint8_t return the state of the pin
+ *     @arg 0: low level
+ *     @arg 1: high level
+ */
+uint8_t XL9555_Read_pin(uint16_t pin_mask)
 {
     uint8_t data = 0x0;
-    uint8_t reg = 0x0;
+    uint8_t pin_state = 0x0;
 
-    reg = (pin & IO_IN_HIG_REG_MASK)
-          ? XL9555_INPUT_PORT1_REG
-          : XL9555_INPUT_PORT0_REG;
-    IIC_Read_Bytes(I2C_NUM_0,
-                   XL9555_IIC_ADDR, reg,
-                   &data, 1);
+    if (pin_mask & XL9555_POFT0_REG_MASK)
+    {
+        IIC_Read_Bytes(I2C_NUM_0,
+                       XL9555_IIC_ADDR, XL9555_INPUT_PORT0_REG,
+                       &data, 1);
+        pin_state = data & (pin_mask & 0xFF);
+    }else if (pin_mask & XL9555_POFT1_REG_MASK)
+    {
+        IIC_Read_Bytes(I2C_NUM_0,
+                       XL9555_IIC_ADDR, XL9555_INPUT_PORT1_REG,
+                       &data, 1);
+        pin_state = data & (pin_mask >> 8);
+    }
+    else
+    {
+        /* Invalid pin mask */
+    }
 
-    return (data & (pin & 0xFF));
+    return (pin_state != 0);
 }
 
 /**
  * @brief 配置 XL9555 的 GPIO 端口的输入输出模式
+ * @usage XL9555_Config_GPIO(IO_07_MASK|IO_17_MASK, XL9555_IO_DIR_OUTPUT);
+ * 
  * @param pin: GPIO 端口
  * @param direction: input or output
  *      @arg 0: output mode
  *      @arg 1: input mode (default)
  */
-void XL9555_Config_GPIO(uint16_t pin, XL9555_IO_DIRECTION direction)
+void XL9555_Config_GPIO(uint16_t pin_mask, XL9555_IO_DIRECTION direction)
 {
-    uint8_t pins_state = 0x0;
-    uint8_t reg = 0x0;
+    uint8_t port_state[2] = {0};
 
-    reg = (pin & IO_IN_HIG_REG_MASK)
-          ? XL9555_CONFIG_PORT1_REG
-          : XL9555_CONFIG_PORT0_REG;
     IIC_Read_Bytes(I2C_NUM_0,
-                   XL9555_IIC_ADDR, reg,
-                   &pins_state, 1);
-    ESP_LOGW("XL9555", "pins_state: %d", pins_state);
-    pins_state = (XL9555_IO_DIR_OUTPUT == direction)
-                 ? pins_state & ~(pin & 0xFF)
-                 : pins_state | (pin & 0xFF);
+                XL9555_IIC_ADDR, XL9555_CONFIG_PORT0_REG,
+                port_state, 2);
+
+    if (pin_mask & XL9555_POFT0_REG_MASK)
+    {
+        port_state[0] = (XL9555_IO_DIR_OUTPUT == direction)
+                    ? port_state[0] & ~(pin_mask & 0xFF)
+                    : port_state[0] | (pin_mask & 0xFF);
+    }
+
+    if (pin_mask & XL9555_POFT1_REG_MASK)
+    {
+        pin_mask >>= 8;
+
+        port_state[1] = (XL9555_IO_DIR_OUTPUT == direction)
+                     ? port_state[1] & ~(pin_mask & 0xFF)
+                     : port_state[1] | (pin_mask & 0xFF);
+    }
+
     IIC_Write_Bytes(I2C_NUM_0,
-                    XL9555_IIC_ADDR, reg,
-                    &pins_state, 1);
+                XL9555_IIC_ADDR, XL9555_CONFIG_PORT0_REG,
+                port_state, 2);
 }
 
 /**
