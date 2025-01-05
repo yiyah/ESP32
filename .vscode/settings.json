@@ -8,5 +8,9 @@
     "idf.toolsPath": "/Users/yiya/tools/esp512/.espressif",
     "files.associations": {
         "freertos.h": "c"
-    }
+    },
+    "conventionalCommits.scopes": [
+        "LED",
+        "IIC"
+    ]
 }
