@@ -85,6 +85,7 @@ esp_err_t __attribute__((unused)) IIC_Write_Bytes(i2c_port_t i2c_num,
                                                   size_t     size)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (slave_addr << 1) | WRITE_BIT, ACK_CHECK_EN);
     i2c_master_write_byte(cmd, slave_reg, ACK_CHECK_EN);

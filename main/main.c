@@ -17,7 +17,9 @@ void app_main(void)
     ESP_LOGW("MAIN", "XL9555_Init");
     XL9555_Config_GPIO(BEEP_PIN, XL9555_IO_DIR_OUTPUT);
     ESP_LOGW("MAIN", "CONFIG_GPIO");
-    while(1) {
+
+    while(1)
+    {
         LED_TOGGLE();
         XL9555_Write_pin(BEEP_PIN, data);
         data = !data;
