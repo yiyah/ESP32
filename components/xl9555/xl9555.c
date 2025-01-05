@@ -31,8 +31,8 @@ void XL9555_Write_pin(uint16_t pin, uint8_t state)
     uint8_t reg = 0x0;
 
     reg = (pin & IO_IN_HIG_REG_MASK)
-          ? XL9555_INPUT_PORT1_REG
-          : XL9555_INPUT_PORT0_REG;
+          ? XL9555_OUTPUT_PORT1_REG
+          : XL9555_OUTPUT_PORT0_REG;
     IIC_Read_Bytes(I2C_NUM_0,
                    XL9555_IIC_ADDR, reg,
                    &pins_state, 1);
