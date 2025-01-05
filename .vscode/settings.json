@@ -11,6 +11,8 @@
     },
     "conventionalCommits.scopes": [
         "LED",
-        "IIC"
+        "IIC",
+        "XL9555",
+        "VSCODE"
     ]
 }
