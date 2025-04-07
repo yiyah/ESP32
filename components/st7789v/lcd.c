@@ -5,8 +5,10 @@
 
 #define ST7789V_PIN_PWR  GPIO_NUM_40
 
-#define LCD_PIXELS_SIZE     (320U * 240U)
-#define LCD_BUFF_SIZE       (LCD_PIXELS_SIZE * 2U)
+#define LCD_LANDSCAPE_PIXEL_WIDTH   (320U)
+#define LCD_LANDSCAPE_PIXEL_HEIGHT  (240U)
+#define LCD_PIXELS_SIZE             (LCD_LANDSCAPE_PIXEL_WIDTH * LCD_LANDSCAPE_PIXEL_HEIGHT)
+#define LCD_BUFF_SIZE               (LCD_PIXELS_SIZE * 2U)
 
 uint8_t g_LCD_BUFF[LCD_BUFF_SIZE] = {0};
 
@@ -18,8 +20,7 @@ void vLCD_SetDisplayDirection(LCD_DISP_DIRECTION dirction)
          * width(x): 320
          * height(y): 240
          */
-        u8ST7789V_Write_CMD(CMD_MADCTL);
-        u8ST7789V_Write_DATA((uint8_t[]){0x00}, 1);
+        u8ST7789V_SetScanDirection(ST7789V_SCAN_RLUD, 1);
     }
     else
     {
@@ -27,8 +28,7 @@ void vLCD_SetDisplayDirection(LCD_DISP_DIRECTION dirction)
          * width(x): 240
          * height(y): 320
          */
-        u8ST7789V_Write_CMD(CMD_MADCTL);
-        u8ST7789V_Write_DATA((uint8_t[]){0x60}, 1);
+        u8ST7789V_SetScanDirection(ST7789V_SCAN_LRUD, 0);
     }
 }
 
@@ -58,7 +58,8 @@ void vLCD_Clear(uint16_t u16Color)
 {
     uint8_t u8arrColor[2] = {(u16Color >> 8) & 0xFF, u16Color & 0xFF};
 
-    vLCD_SetWindow(0, 0, 100-1, 200-1);
+    vLCD_SetDisplayDirection(LCD_DISP_LANDSCAPE);
+    vLCD_SetWindow(0, 0, LCD_LANDSCAPE_PIXEL_WIDTH - 1, LCD_LANDSCAPE_PIXEL_HEIGHT - 1);
 
     for (uint32_t i = 0; i < LCD_PIXELS_SIZE - 1; i++)
     {

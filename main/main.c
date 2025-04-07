@@ -11,7 +11,6 @@
 
 void app_main(void)
 {
-    uint8_t data = 0;
     LED_Init();
     ESP_LOGW("MAIN", "LED_Init");
     ESP_ERROR_CHECK(IIC_Master_Init());
@@ -25,7 +24,8 @@ void app_main(void)
     ESP_ERROR_CHECK(SPI_Master_Init(0));
 
     vLCD_Init();
-    vLCD_Clear(0x1FF0);
+    vLCD_SetDisplayDirection(LCD_DISP_LANDSCAPE);
+    vLCD_Clear(0x1F00);
 
     while(1)
     {

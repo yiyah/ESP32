@@ -11,6 +11,7 @@ typedef enum
 
 void vLCD_Init(void);
 void vLCD_Clear(uint16_t u16Color);
+void vLCD_SetDisplayDirection(LCD_DISP_DIRECTION dirction);
 
 
 #endif /* __LCD_H */

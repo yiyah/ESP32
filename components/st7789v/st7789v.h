@@ -32,6 +32,7 @@ typedef enum
 void ST7789V_Init(void);
 uint8_t u8ST7789V_Write_CMD(uint8_t cmd);
 uint8_t u8ST7789V_Write_DATA(uint8_t *pu8data, uint16_t u16len);
+uint8_t u8ST7789V_SetScanDirection(ST7789V_SCAN_DIRECTION dir, uint8_t u8XY_Exchange);
 
 
 #endif

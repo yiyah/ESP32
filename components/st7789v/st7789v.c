@@ -28,11 +28,21 @@
  */
 
 
-#define REG_MADCTL      0x36u /* Memory Data Access Control register */
-
 #define ST7789V_PIN_DC  GPIO_NUM_40
 #define ST7789V_PIN_CS  GPIO_NUM_21
 
+typedef union {
+    struct {
+        uint8_t reserved_1: 2;
+        uint8_t MH: 1;   /* Horizontal Refresh Order */
+        uint8_t RGB: 1;  /* RGB/BGR Order */
+        uint8_t ML: 1;   /* Vertical Refresh Order */
+        uint8_t MV: 1;   /* Row/Column Exchange */
+        uint8_t MX: 1;   /* Column Address Order */
+        uint8_t MY: 1;   /* Row Address Order */
+    } bits;
+    uint8_t value;
+} MADCTL_DATA;
 
 #define GPIO_RST(x)     do { \
                             (x) \
@@ -82,33 +92,38 @@ uint8_t u8ST7789V_Write_DATA(uint8_t *pu8data, uint16_t u16len)
 
 uint8_t u8ST7789V_SetScanDirection(ST7789V_SCAN_DIRECTION dir, uint8_t u8XY_Exchange)
 {
-    uint8_t u8data = 0;
+    MADCTL_DATA madctl_data = {0};
+
+    madctl_data.bits.MV = (u8XY_Exchange) ? 1 : 0;
 
     switch (dir)
     {
         case ST7789V_SCAN_LRUD:
-            u8data = 0x00;
+            madctl_data.bits.MX = 0;
+            madctl_data.bits.MY = 0;
             break;
         case ST7789V_SCAN_RLUD:
-            u8data = 0x60;
+            madctl_data.bits.MX = 1;
+            madctl_data.bits.MY = 0;
             break;
         case ST7789V_SCAN_LRDU:
-            u8data = 0xC0;
+            madctl_data.bits.MX = 0;
+            madctl_data.bits.MY = 1;
             break;
         case ST7789V_SCAN_RLDU:
-            u8data = 0xA0;
+            madctl_data.bits.MX = 1;
+            madctl_data.bits.MY = 1;
             break;
         default:
             break;
     }
 
-    return u8ST7789V_Write_CMD(REG_MADCTL) || u8ST7789V_Write_DATA(&u8data, 1);
+    return u8ST7789V_Write_CMD(CMD_MADCTL) || u8ST7789V_Write_DATA((uint8_t *)(&madctl_data), 1);
 }
 
 void ST7789V_Init(void)
 {
     esp_err_t ret = ESP_OK;
-    uint8_t u8data = 0;
 
     // 初始化 DC IO
     vGPIO_Init();
@@ -131,8 +146,7 @@ void ST7789V_Init(void)
     vTaskDelay(120);
 
     u8ST7789V_Write_CMD(CMD_MADCTL);
-    u8data = 0U;
-    u8ST7789V_Write_DATA(&u8data, 1);
+    u8ST7789V_Write_DATA((uint8_t[]){0}, 1);
 
     u8ST7789V_Write_CMD(CMD_COLMOD);
     u8ST7789V_Write_DATA((uint8_t[]){COLMOD_65K_16BIT}, 1);
