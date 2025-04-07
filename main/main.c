@@ -5,6 +5,9 @@
 #include "led.h"
 #include "iic.h"
 #include "xl9555.h"
+#include "spi.h"
+#include "lcd.h"
+
 
 void app_main(void)
 {
@@ -16,13 +19,19 @@ void app_main(void)
     XL9555_Init();
     ESP_LOGW("MAIN", "XL9555_Init");
     XL9555_Config_GPIO(BEEP_PIN, XL9555_IO_DIR_OUTPUT);
+    XL9555_Config_GPIO(LCD_RST_PIN, XL9555_IO_DIR_OUTPUT);
+    XL9555_Config_GPIO(LCD_PWR_PIN, XL9555_IO_DIR_OUTPUT);
     ESP_LOGW("MAIN", "CONFIG_GPIO");
+    ESP_ERROR_CHECK(SPI_Master_Init(0));
+
+    vLCD_Init();
+    vLCD_Clear(0x1FF0);
 
     while(1)
     {
         LED_TOGGLE();
-        XL9555_Write_pin(BEEP_PIN, data);
-        data = !data;
+        // XL9555_Write_pin(BEEP_PIN, data);
+        // data = !data;
         vTaskDelay(1000);
     }
 }

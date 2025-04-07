@@ -47,8 +47,7 @@ esp_err_t SPI_Master_Init(uint16_t size_byte)
     spi_bus_conf.sclk_io_num = SPI_CLK_GPIO_PIN;                                /* SPI_SCLK引脚 */
     spi_bus_conf.quadwp_io_num = -1;                                            /* SPI写保护信号引脚，该引脚未使能 */
     spi_bus_conf.quadhd_io_num = -1;                                            /* SPI保持信号引脚，该引脚未使能 */
-    spi_bus_conf.max_transfer_sz = size_byte;                                   /* 配置最大传输大小，以字节为单位 */
-    
+    spi_bus_conf.max_transfer_sz = 320 * 240 * 2;                               /* 配置最大传输大小，以字节为单位 */
     /* 初始化SPI总线 */
-    return spi_bus_initialize(SPI_HOST_NUM, &spi_bus_conf, SPI_DMA_CH_AUTO);        /* SPI总线初始化 */
+    return spi_bus_initialize(SPI_HOST_NUM, &spi_bus_conf, SPI_DMA_CH_AUTO);    /* SPI总线初始化 */
 }

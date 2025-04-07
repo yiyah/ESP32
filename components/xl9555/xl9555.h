@@ -1,6 +1,8 @@
 #ifndef __XL9555_H
 #define __XL9555_H
 
+#include <stdint.h>
+
 typedef enum {
     XL9555_IO_DIR_OUTPUT = 0,
     XL9555_IO_DIR_INPUT = 1,
@@ -29,6 +31,8 @@ typedef enum {
 #define KEY_1_PIN                       IO_16_MASK
 #define KEY_2_PIN                       IO_15_MASK
 #define KEY_3_PIN                       IO_14_MASK
+#define LCD_RST_PIN                     IO_12_MASK
+#define LCD_PWR_PIN                     IO_13_MASK
 
 void XL9555_Write_pin(uint16_t pin, uint8_t state);
 uint8_t XL9555_Read_pin(uint16_t pin);

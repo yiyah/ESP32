@@ -17,6 +17,12 @@
 #define NACK_VAL                    0x1                 /*!< I2C nack value */
 
 /**
+ * 
+ * i2c_master_write_read_device(I2C_MASTER_NUM, dev_addr, &reg_addr, 1, data, len, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
+ * i2c_master_write_to_device(I2C_MASTER_NUM, dev_addr, write_buf, sizeof(write_buf), I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
+ */
+
+/**
  * @brief test code to read esp-i2c-slave
  *        We need to fill the buffer of esp slave device, then master can read them out.
  *
