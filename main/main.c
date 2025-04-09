@@ -26,12 +26,15 @@ void app_main(void)
     vLCD_Init();
     vLCD_SetDisplayDirection(LCD_DISP_LANDSCAPE);
     vLCD_Clear(0x1F00);
+    uint16_t color = 0;
 
     while(1)
     {
         LED_TOGGLE();
         // XL9555_Write_pin(BEEP_PIN, data);
         // data = !data;
-        vTaskDelay(1000);
+        vLCD_Clear(color);
+        color = (color + 0x0100) & 0xFFFF;
+        vTaskDelay(500);
     }
 }

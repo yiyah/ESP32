@@ -56,14 +56,18 @@ void vLCD_SetWindow(uint16_t u16X_star, uint16_t u16Y_star,
 
 void vLCD_Clear(uint16_t u16Color)
 {
-    uint8_t u8arrColor[2] = {(u16Color >> 8) & 0xFF, u16Color & 0xFF};
-
     vLCD_SetDisplayDirection(LCD_DISP_LANDSCAPE);
     vLCD_SetWindow(0, 0, LCD_LANDSCAPE_PIXEL_WIDTH - 1, LCD_LANDSCAPE_PIXEL_HEIGHT - 1);
-
-    for (uint32_t i = 0; i < LCD_PIXELS_SIZE - 1; i++)
+    
+    for (uint32_t i = 0; i < LCD_PIXELS_SIZE / 2; i++)
     {
-        u8ST7789V_Write_DATA(u8arrColor, 2);
+        g_LCD_BUFF[i*2]   = (u16Color >> 8) & 0xFF;
+        g_LCD_BUFF[i*2+1] = u16Color & 0xFF;
+    }
+
+    for (uint16_t i = 0; i < 240; i++)
+    {
+        u8ST7789V_Write_DATA(g_LCD_BUFF, 320*2);
     }
 }
 
@@ -75,5 +79,7 @@ void vLCD_Power(uint8_t u8State)
 void vLCD_Init(void)
 {
     ST7789V_Init();
+    vLCD_SetDisplayDirection(LCD_DISP_LANDSCAPE);
     vLCD_Power(1);
+    vLCD_Clear(0xFFFF);
 }
