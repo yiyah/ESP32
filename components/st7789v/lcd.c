@@ -2,7 +2,6 @@
 #include "st7789v.h"
 #include "lcd.h"
 
-
 #define ST7789V_PIN_PWR  GPIO_NUM_40
 
 #define LCD_LANDSCAPE_PIXEL_WIDTH   (320U)
@@ -10,7 +9,106 @@
 #define LCD_PIXELS_SIZE             (LCD_LANDSCAPE_PIXEL_WIDTH * LCD_LANDSCAPE_PIXEL_HEIGHT)
 #define LCD_BUFF_SIZE               (LCD_PIXELS_SIZE * 2U)
 
+#define GET_FONT_CHAR_SIZE_BYTE(w, h)       ((w) * ((((h)+7)/8)))
+
 uint8_t g_LCD_BUFF[LCD_BUFF_SIZE] = {0};
+
+void vLCD_SetWindow(uint16_t u16X_star, uint16_t u16Y_star,
+    uint16_t u16X_end, uint16_t u16Y_end);
+
+/* 逐行式 */
+void LCD_vShow_ASCII_Char(const uint16_t u16X, const uint16_t u16Y,
+                          const uint8_t u8Char, const ASCIIFont *pfont, const uint16_t u16Color)
+{
+    uint8_t offset = 0;
+    uint16_t u8CharSize_byte = GET_FONT_CHAR_SIZE_BYTE(pfont->w, pfont->h);
+    const uint8_t *pHead = pfont->chars + ((u8Char - ' ') * (u8CharSize_byte + offset)) + offset;
+    uint16_t u16SetColor = u16Color;
+
+    // vLCD_SetWindow(u16X, u16Y, u16X + 8 * ((pfont->w + 7) / 8) - 1, u16Y + pfont->h - 1);
+    vLCD_SetWindow(u16X, u16Y, u16X + pfont->w - 1, u16Y + pfont->h - 1);
+
+    for (uint16_t i = 0; i < u8CharSize_byte; i++)
+    {
+        for (uint8_t j = 0; j < 8; j++)
+        {
+            if (*pHead & (1 << (7-j)))      /* 取模走向：顺向。就用 "7-j" */
+            {
+                u16SetColor = u16Color;
+            }
+            else
+            {
+                u16SetColor = 0x0000;
+            }
+            u8ST7789V_Write_DATA((uint8_t[]){(u16SetColor >> 8) & 0xFF, u16SetColor & 0xFF}, 2);
+        }
+        pHead++;
+    }
+}
+
+/* 逐列式 */
+void LCD_vShow_Char(const uint16_t u16X, const uint16_t u16Y,
+                    const uint8_t u8Char, const Font *pfont, const uint16_t u16Color)
+{
+    uint8_t offset = 4;     /* 字模数据前4个字节是UTF-8 */
+    uint16_t u8CharSize_byte = GET_FONT_CHAR_SIZE_BYTE(pfont->w, pfont->h);
+    const uint8_t *pHead = pfont->chars + ((u8Char - ' ') * (u8CharSize_byte + offset)) + offset;
+    uint16_t u16SetColor = u16Color;
+    int oneCol_size_byte = (pfont->h + 7) / 8;  // 每列字模数据的字节数
+
+    vLCD_SetWindow(u16X, u16Y, u16X + pfont->w - 1, u16Y + pfont->h - 1);
+
+    for (uint16_t i = 0; i < pfont->h; i++)
+    {
+        if ((i % 8 == 0)
+        && (i != 0))
+        {
+            pHead ++;
+        }
+
+        for (uint16_t j = 0; j < pfont->w; j++)
+        {
+            if (*(pHead + j * oneCol_size_byte) & (1 << (i % 8)))
+            {
+                u16SetColor = u16Color;
+            }
+            else
+            {
+                u16SetColor = 0x0000;
+            }
+            u8ST7789V_Write_DATA((uint8_t[]){(u16SetColor >> 8) & 0xFF, u16SetColor & 0xFF}, 2);
+        }
+    }
+}
+
+/* 逐行式 */
+// void LCD_vShow_Char(uint16_t u16X, uint16_t u16Y, uint8_t u8Char, Font *pfont, uint16_t u16Color)
+// {
+//     uint8_t offset = 4;
+//     uint16_t u8CharSize_byte = GET_FONT_CHAR_SIZE_BYTE(pfont->w, pfont->h);
+//     const uint8_t *pHead = pfont->chars + ((u8Char - ' ') * (u8CharSize_byte + offset)) + offset;
+//     uint16_t u16SetColor = u16Color;
+
+//     vLCD_SetWindow(u16X, u16Y, u16X + 8 * ((pfont->w + 7) / 8) - 1, u16Y + pfont->h - 1);
+
+//     for (uint16_t i = 0; i < u8CharSize_byte; i++)
+//     {
+//         for (uint8_t j = 0; j < 8; j++)
+//         {
+//             if (*pHead & (1 << (j)))            /* 取模走向：逆向 */
+//             // if (*pHead & (1 << (7-j)))       /* 取模走向：顺向 */
+//             {
+//                 u16SetColor = u16Color;
+//             }
+//             else
+//             {
+//                 u16SetColor = 0x0000;
+//             }
+//             u8ST7789V_Write_DATA((uint8_t[]){(u16SetColor >> 8) & 0xFF, u16SetColor & 0xFF}, 2);
+//         }
+//         pHead++;
+//     }
+// }
 
 void vLCD_SetDisplayDirection(LCD_DISP_DIRECTION dirction)
 {

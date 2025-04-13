@@ -8,7 +8,6 @@
 #include "spi.h"
 #include "lcd.h"
 
-
 void app_main(void)
 {
     LED_Init();
@@ -25,16 +24,25 @@ void app_main(void)
 
     vLCD_Init();
     vLCD_SetDisplayDirection(LCD_DISP_LANDSCAPE);
-    vLCD_Clear(0x1F00);
+    vLCD_Clear(LCD_COLOR_RED);
     uint16_t color = 0;
-
+    vTaskDelay(500);
+    // vLCD_SetDisplayDirection(LCD_DISP_PORTRAIT);
+    vLCD_SetDisplayDirection(LCD_DISP_LANDSCAPE);
+    LCD_vShow_ASCII_Char(12 + 0, 150, 'A', &afont16x8, LCD_COLOR_WHITE);
+    LCD_vShow_ASCII_Char(12 + 8, 150, 'b', &afont16x8, LCD_COLOR_WHITE);
+    LCD_vShow_ASCII_Char(12 + 16, 150, 'C', &afont16x8, LCD_COLOR_WHITE);
+    LCD_vShow_ASCII_Char(12 + 24, 150, 'd', &afont16x8, LCD_COLOR_WHITE);
+    LCD_vShow_Char(12 + 32, 150, 'e', &font24x32, LCD_COLOR_BLUE);
+    LCD_vShow_Char(12 + 64, 150 + 0, 'F', &font24x32, LCD_COLOR_BLUE);
+    LCD_vShow_Char(12 + 0, 150 + 32, 'F', &font24x32, LCD_COLOR_BLUE);
     while(1)
     {
         LED_TOGGLE();
         // XL9555_Write_pin(BEEP_PIN, data);
         // data = !data;
-        vLCD_Clear(color);
-        color = (color + 0x0100) & 0xFFFF;
+        // vLCD_Clear(color);
+        // color = (color + 0x0100) & 0xFFFF;
         vTaskDelay(500);
     }
 }
