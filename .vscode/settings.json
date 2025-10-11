@@ -22,5 +22,9 @@
     "random": "c",
     "app_button.h": "c",
     "iot_button.h": "c"
-  }
+  },
+  "conventionalCommits.scopes": [
+    "button",
+    "lvgl"
+  ]
 }
