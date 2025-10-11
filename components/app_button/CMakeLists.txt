@@ -1,8 +1,8 @@
 idf_component_register(
     SRCS
-        "main.c"
+        "app_button.c"
     INCLUDE_DIRS
-        "."
+        "include"
     REQUIRES
-        app_button
+        button
 )

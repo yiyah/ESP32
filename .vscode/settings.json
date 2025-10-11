@@ -5,7 +5,7 @@
   "idf.openOcdConfigs": [
     "board/esp32-wrover-kit-3.3v.cfg"
   ],
-  "idf.port": "/dev/tty.wchusbserial120",
+  "idf.port": "/dev/tty.wchusbserial1120",
   "idf.toolsPath": "/Users/yiya/.espressif",
   "idf.customExtraVars": {
     "IDF_TARGET": "esp32c3"
@@ -15,5 +15,12 @@
     "--background-index",
     "--query-driver=/Users/yiya/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc",
     "--compile-commands-dir=${workspaceFolder}/build"
-  ]
+  ],
+  "idf.flashType": "UART",
+  "files.associations": {
+    "button.h": "c",
+    "random": "c",
+    "app_button.h": "c",
+    "iot_button.h": "c"
+  }
 }
