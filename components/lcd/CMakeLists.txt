@@ -1,9 +1,9 @@
 idf_component_register(
     SRCS
-        "main.c"
+        "lcd.c"
     INCLUDE_DIRS
-        "."
+        "include"
     REQUIRES
-        app_button
-        lcd
+        driver
+        esp_lcd
 )
