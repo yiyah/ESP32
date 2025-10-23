@@ -23,14 +23,14 @@
  *      TYPEDEFS
  **********************/
 
-/**********************
+ /**********************
  *  STATIC PROTOTYPES
  **********************/
 
 /**********************
  *  STATIC VARIABLES
  **********************/
-static uint8_t color_data[LCD_HOR_RESOLUTION * LCD_VER_RESOLUTION * 2];
+static uint8_t gram[LCD_HOR_RESOLUTION * LCD_VER_RESOLUTION * 2];
 static esp_lcd_panel_handle_t panel_handle = NULL;
 
 /**********************
@@ -40,13 +40,34 @@ static esp_lcd_panel_handle_t panel_handle = NULL;
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
+void lcd_printf(const char* str)
+{
+
+}
+
+/**
+ * x: 0 ~ LCD_HOR_RESOLUTION-1
+ * y: 0 ~ LCD_VER_RESOLUTION-1
+ */
+void lcd_set_pixel(uint16_t x, uint16_t y, uint16_t color565)
+{
+    uint32_t index = (y * LCD_COLS + x) * 2;
+    gram[index] = (color565 >> 8) & 0xFF;
+    gram[index + 1] = color565 & 0xFF;
+}
+
+void lcd_flush(void)
+{
+    esp_lcd_panel_draw_bitmap(panel_handle, 0, 0 , LCD_HOR_RESOLUTION, LCD_VER_RESOLUTION, gram);
+}
+
 void lcd_clear(uint16_t color565)
 {
-    for (uint32_t i = 0; i < sizeof(color_data); i += 2) {
-        color_data[i] = (color565 >> 8) & 0xFF;
-        color_data[i + 1] = color565 & 0xFF;
+    for (uint32_t i = 0; i < sizeof(gram); i += 2) {
+        gram[i] = (color565 >> 8) & 0xFF;
+        gram[i + 1] = color565 & 0xFF;
     }
-    esp_lcd_panel_draw_bitmap(panel_handle, 0, 0 , LCD_HOR_RESOLUTION - 1, LCD_VER_RESOLUTION - 1, color_data);
+    // esp_lcd_panel_draw_bitmap(panel_handle, 0, 0 , LCD_HOR_RESOLUTION - 1, LCD_VER_RESOLUTION - 1, gram);
 }
 
 void lcd_init(void)
@@ -70,7 +91,7 @@ void lcd_init(void)
     };
     ESP_ERROR_CHECK(spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO));
 
-    /* 初始化和SPI相关的 IO，非SPI总线 */
+    /* 初始化和SPI相关的 IO，非SPI总线的 */
     esp_lcd_panel_io_handle_t io_handle = NULL;
     esp_lcd_panel_io_spi_config_t io_config = {
         .dc_gpio_num = PIN_NUM_DC,
@@ -84,14 +105,14 @@ void lcd_init(void)
     // Attach the LCD to the SPI bus
     ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)LCD_HOST, &io_config, &io_handle));
 
-    /* 初始化 LCD 面板相关的 IO */
-    // esp_lcd_panel_handle_t panel_handle = NULL;
+    /* 初始化 LCD panel 相关的 IO */
     esp_lcd_panel_dev_config_t panel_config = {
         .reset_gpio_num = PIN_NUM_RST,
         .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,
         .bits_per_pixel = 16,
     };
     // Initialize the LCD configuration
+    /* install st7789 driver */
     ESP_ERROR_CHECK(esp_lcd_new_panel_st7789(io_handle, &panel_config, &panel_handle));
 
     // Turn off backlight to avoid unpredictable display on the LCD screen while initializing
