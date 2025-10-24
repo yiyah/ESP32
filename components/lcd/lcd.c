@@ -14,6 +14,7 @@
 #include "esp_lcd_panel_ops.h"
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
+#include "font.h"
 #include "lcd.h"
 /*********************
  *      DEFINES
@@ -22,7 +23,21 @@
 /**********************
  *      TYPEDEFS
  **********************/
-
+typedef struct lcd
+{
+    const ASCIIFont* font;
+    struct color
+    {
+        uint16_t fore;
+        uint16_t back;
+    };
+    
+    struct point
+    {
+        uint16_t x;
+        uint16_t y;
+    };
+} lcd_t;
  /**********************
  *  STATIC PROTOTYPES
  **********************/
@@ -30,6 +45,7 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
+static lcd_t lcd;
 static uint8_t gram[LCD_HOR_RESOLUTION * LCD_VER_RESOLUTION * 2];
 static esp_lcd_panel_handle_t panel_handle = NULL;
 
@@ -43,6 +59,30 @@ static esp_lcd_panel_handle_t panel_handle = NULL;
 void lcd_printf(const char* str)
 {
 
+}
+
+/**
+ * 列行式字库打印
+ */
+void lcd_printf_ascii(uint8_t ascii)
+{
+    uint8_t char_index = ascii - ' ';
+    uint32_t index = (lcd.point.y * LCD_COLS + lcd.point.x) * 2;
+
+    for (uint8_t i = 0; i < lcd.font->h; i++) {
+        for (uint8_t j = 0; j < lcd.font->w; j++) {
+            uint8_t byte = lcd.font->chars[char_index * lcd.font->h + i];
+            if (byte & (0x80 >> (j % 8))) {
+                gram[index + 0] = 0xFF;
+                gram[index + 1] = 0xFF;
+            } else {
+                gram[index + 0] = 0x00;
+                gram[index + 1] = 0x00;
+            }
+            index += 2;
+        }
+        index += (LCD_COLS - lcd.font->w) * 2;
+    }
 }
 
 /**

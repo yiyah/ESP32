@@ -14,7 +14,7 @@
 /*********************
  *      DEFINES
  *********************/
-#define BUTTON_IO_NUM           5
+#define BUTTON_IO_NUM           10
 #define BUTTON_ACTIVE_LEVEL     0
 
 /**********************

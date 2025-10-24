@@ -21,10 +21,23 @@
     "button.h": "c",
     "random": "c",
     "app_button.h": "c",
-    "iot_button.h": "c"
+    "iot_button.h": "c",
+    "freertos.h": "c",
+    "compare": "c",
+    "esp_system.h": "c",
+    "stdint.h": "c",
+    "spi_config.h": "c",
+    "gpio.h": "c",
+    "regex": "c",
+    "spi_master.h": "c",
+    "esp_lcd_panel_io.h": "c",
+    "task.h": "c",
+    "esp_lcd_panel_interface.h": "c",
+    "cstdlib": "c"
   },
   "conventionalCommits.scopes": [
     "button",
-    "lvgl"
+    "lvgl",
+    "lcd"
   ]
 }
