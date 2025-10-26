@@ -25,18 +25,21 @@
  **********************/
 typedef struct lcd
 {
+    uint16_t gram[LCD_HOR_RESOLUTION * LCD_VER_RESOLUTION];
     const ASCIIFont* font;
-    struct color
+    esp_lcd_panel_handle_t panel_handle;
+
+    struct
     {
         uint16_t fore;
         uint16_t back;
-    };
+    } color;
     
-    struct point
+    struct
     {
         uint16_t x;
         uint16_t y;
-    };
+    } point;
 } lcd_t;
  /**********************
  *  STATIC PROTOTYPES
@@ -46,8 +49,6 @@ typedef struct lcd
  *  STATIC VARIABLES
  **********************/
 static lcd_t lcd;
-static uint8_t gram[LCD_HOR_RESOLUTION * LCD_VER_RESOLUTION * 2];
-static esp_lcd_panel_handle_t panel_handle = NULL;
 
 /**********************
  *      MACROS
@@ -73,11 +74,11 @@ void lcd_printf_ascii(uint8_t ascii)
         for (uint8_t j = 0; j < lcd.font->w; j++) {
             uint8_t byte = lcd.font->chars[char_index * lcd.font->h + i];
             if (byte & (0x80 >> (j % 8))) {
-                gram[index + 0] = 0xFF;
-                gram[index + 1] = 0xFF;
+                lcd.gram[index + 0] = 0xFF;
+                lcd.gram[index + 1] = 0xFF;
             } else {
-                gram[index + 0] = 0x00;
-                gram[index + 1] = 0x00;
+                lcd.gram[index + 0] = 0x00;
+                lcd.gram[index + 1] = 0x00;
             }
             index += 2;
         }
@@ -91,23 +92,21 @@ void lcd_printf_ascii(uint8_t ascii)
  */
 void lcd_set_pixel(uint16_t x, uint16_t y, uint16_t color565)
 {
-    uint32_t index = (y * LCD_COLS + x) * 2;
-    gram[index] = (color565 >> 8) & 0xFF;
-    gram[index + 1] = color565 & 0xFF;
+    uint32_t index = y * LCD_COLS + x;
+    lcd.gram[index] = color565;
 }
 
 void lcd_flush(void)
 {
-    esp_lcd_panel_draw_bitmap(panel_handle, 0, 0 , LCD_HOR_RESOLUTION, LCD_VER_RESOLUTION, gram);
+    esp_lcd_panel_draw_bitmap(lcd.panel_handle, 0, 0 , LCD_HOR_RESOLUTION, LCD_VER_RESOLUTION, lcd.gram);
 }
 
 void lcd_clear(uint16_t color565)
 {
-    for (uint32_t i = 0; i < sizeof(gram); i += 2) {
-        gram[i] = (color565 >> 8) & 0xFF;
-        gram[i + 1] = color565 & 0xFF;
+    for (uint32_t i = 0; i < sizeof(lcd.gram); i++) {
+        lcd.gram[i] = color565;
     }
-    // esp_lcd_panel_draw_bitmap(panel_handle, 0, 0 , LCD_HOR_RESOLUTION - 1, LCD_VER_RESOLUTION - 1, gram);
+    // esp_lcd_panel_draw_bitmap(lcd.panel_handle, 0, 0 , LCD_HOR_RESOLUTION - 1, LCD_VER_RESOLUTION - 1, lcd.gram);
 }
 
 void lcd_init(void)
@@ -153,26 +152,26 @@ void lcd_init(void)
     };
     // Initialize the LCD configuration
     /* install st7789 driver */
-    ESP_ERROR_CHECK(esp_lcd_new_panel_st7789(io_handle, &panel_config, &panel_handle));
+    ESP_ERROR_CHECK(esp_lcd_new_panel_st7789(io_handle, &panel_config, &lcd.panel_handle));
 
     // Turn off backlight to avoid unpredictable display on the LCD screen while initializing
     // the LCD panel driver. (Different LCD screens may need different levels)
     ESP_ERROR_CHECK(gpio_set_level(PIN_NUM_BCKL, LCD_BK_LIGHT_OFF_LEVEL));
 
     // Reset the display
-    ESP_ERROR_CHECK(esp_lcd_panel_reset(panel_handle));
+    ESP_ERROR_CHECK(esp_lcd_panel_reset(lcd.panel_handle));
 
     // Initialize LCD panel
-    ESP_ERROR_CHECK(esp_lcd_panel_init(panel_handle));
+    ESP_ERROR_CHECK(esp_lcd_panel_init(lcd.panel_handle));
 
     // Turn on the screen
-    ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel_handle, true));
-    ESP_ERROR_CHECK(esp_lcd_panel_invert_color(panel_handle, true));
+    ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(lcd.panel_handle, true));
+    ESP_ERROR_CHECK(esp_lcd_panel_invert_color(lcd.panel_handle, true));
 
     // Swap x and y axis (Different LCD screens may need different options)
-    // ESP_ERROR_CHECK(esp_lcd_panel_swap_xy(panel_handle, true));
+    // ESP_ERROR_CHECK(esp_lcd_panel_swap_xy(lcd.panel_handle, true));
 
-    esp_lcd_panel_set_gap(panel_handle, 52, 40);
+    esp_lcd_panel_set_gap(lcd.panel_handle, 52, 40);
 
     // Turn on backlight (Different LCD screens may need different levels)
     ESP_ERROR_CHECK(gpio_set_level(PIN_NUM_BCKL, LCD_BK_LIGHT_ON_LEVEL));

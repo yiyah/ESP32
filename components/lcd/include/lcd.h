@@ -41,15 +41,17 @@ extern "C" {
 #define LCD_BK_LIGHT_OFF_LEVEL  0
 #define LCD_BK_LIGHT_ON_LEVEL   1
 
-#define LCD_COLOR_RED           0xF800
-#define LCD_COLOR_GREEN         0x07E0
-#define LCD_COLOR_BLUE          0x001F
-#define LCD_COLOR_WHITE         0xFFFF
-#define LCD_COLOR_BLACK         0x0000
-
 /**********************
  *      TYPEDEFS
  **********************/
+typedef enum
+{
+    LCD_RED     = 0x00F8,
+    LCD_GREEN   = 0xE007,
+    LCD_BLUE    = 0x1F00,
+    LCD_WHITE   = 0xFFFF,
+    LCD_BLACK   = 0x0000
+} LCD_COLOR565_LITTE_ENDIAN;
 
 /**********************
  * GLOBAL PROTOTYPES
