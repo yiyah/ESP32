@@ -49,6 +49,7 @@ typedef struct lcd
  *  STATIC VARIABLES
  **********************/
 static lcd_t lcd;
+static esp_lcd_panel_io_handle_t io_handle;
 
 /**********************
  *      MACROS
@@ -103,7 +104,7 @@ void lcd_flush(void)
 
 void lcd_clear(uint16_t color565)
 {
-    for (uint32_t i = 0; i < sizeof(lcd.gram); i++) {
+    for (uint32_t i = 0; i < sizeof(lcd.gram)/2; i++) {
         lcd.gram[i] = color565;
     }
     // esp_lcd_panel_draw_bitmap(lcd.panel_handle, 0, 0 , LCD_HOR_RESOLUTION - 1, LCD_VER_RESOLUTION - 1, lcd.gram);
@@ -131,7 +132,6 @@ void lcd_init(void)
     ESP_ERROR_CHECK(spi_bus_initialize(LCD_HOST, &buscfg, SPI_DMA_CH_AUTO));
 
     /* 初始化和SPI相关的 IO，非SPI总线的 */
-    esp_lcd_panel_io_handle_t io_handle = NULL;
     esp_lcd_panel_io_spi_config_t io_config = {
         .dc_gpio_num = PIN_NUM_DC,
         .cs_gpio_num = PIN_NUM_CS,
