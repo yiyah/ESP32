@@ -1,6 +1,7 @@
 idf_component_register(
     SRCS
         "lcd.c"
+        "font.c"
     INCLUDE_DIRS
         "include"
     REQUIRES

@@ -26,7 +26,7 @@
 typedef struct lcd
 {
     uint16_t gram[LCD_HOR_RESOLUTION * LCD_VER_RESOLUTION];
-    const ASCIIFont* font;
+    const Font* font;
     esp_lcd_panel_handle_t panel_handle;
 
     struct
@@ -54,7 +54,8 @@ static esp_lcd_panel_io_handle_t io_handle;
 /**********************
  *      MACROS
  **********************/
-
+#define GET_GRAM_INDEX(x, y)        ((y)*LCD_COLS + (x))
+#define GET_BYTES_PER_CHAR(w, h)    ((((w) + 7) / 8) * (h))
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
@@ -64,27 +65,37 @@ void lcd_printf(const char* str)
 }
 
 /**
- * 列行式字库打印
+ * 逐行式字模显示ASCII字符
  */
 void lcd_printf_ascii(uint8_t ascii)
 {
     uint8_t char_index = ascii - ' ';
-    uint32_t index = (lcd.point.y * LCD_COLS + lcd.point.x) * 2;
+    uint32_t gram_index = GET_GRAM_INDEX(lcd.point.x, lcd.point.y);
 
-    for (uint8_t i = 0; i < lcd.font->h; i++) {
-        for (uint8_t j = 0; j < lcd.font->w; j++) {
-            uint8_t byte = lcd.font->chars[char_index * lcd.font->h + i];
-            if (byte & (0x80 >> (j % 8))) {
-                lcd.gram[index + 0] = 0xFF;
-                lcd.gram[index + 1] = 0xFF;
-            } else {
-                lcd.gram[index + 0] = 0x00;
-                lcd.gram[index + 1] = 0x00;
-            }
-            index += 2;
+    // ASCIIFont* afont = lcd.font->ascii;
+    printf("char_index: %d\n", char_index);
+
+    const Font* afont = lcd.font;
+    
+    uint16_t num_bytes_in_row = (afont->w + 7) / 8; // 字符 每行 占用的字节数
+    uint16_t num_bytes_one_char = GET_BYTES_PER_CHAR(afont->w, afont->h) + 4;  // 每个字符占用的字节数, 前4字节为utf8编码
+    
+    const uint8_t* char_map = &afont->chars[char_index * num_bytes_one_char + 4]; // +4 跳过前4字节的utf8编码
+
+    for (uint8_t row = 0; row < afont->h; row++) {
+        for (uint8_t col = 0; col < afont->w; col++) {
+
+            if (char_map[col / 8] & (0x1 << (col % 8))) {
+                lcd.gram[gram_index + col] = lcd.color.fore;
+            }/* else {
+                lcd.gram[gram_index + col] = lcd.color.back;
+                printf(" ");
+            }*/
         }
-        index += (LCD_COLS - lcd.font->w) * 2;
+        char_map += num_bytes_in_row;
+        gram_index += LCD_COLS;
     }
+    lcd.point.x += afont->w;
 }
 
 /**
@@ -93,7 +104,7 @@ void lcd_printf_ascii(uint8_t ascii)
  */
 void lcd_set_pixel(uint16_t x, uint16_t y, uint16_t color565)
 {
-    uint32_t index = y * LCD_COLS + x;
+    uint32_t index = GET_GRAM_INDEX(x, y);
     lcd.gram[index] = color565;
 }
 
@@ -177,6 +188,12 @@ void lcd_init(void)
     ESP_ERROR_CHECK(gpio_set_level(PIN_NUM_BCKL, LCD_BK_LIGHT_ON_LEVEL));
 
     lcd_clear(0x001F);
+
+    lcd.font = &font12x12;
+    lcd.color.fore = LCD_WHITE;
+    lcd.color.back = LCD_BLACK;
+    lcd.point.x = 0;
+    lcd.point.y = 0;
 }
 /**********************
  *   STATIC FUNCTIONS

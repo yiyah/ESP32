@@ -60,6 +60,7 @@ void lcd_init(void);
 void lcd_clear(uint16_t color565);
 void lcd_set_pixel(uint16_t x, uint16_t y, uint16_t color565);
 void lcd_flush(void);
+void lcd_printf_ascii(uint8_t ascii);
 
 /**********************
  *      MACROS
