@@ -2,7 +2,12 @@ menu "LCD Configuration"
 
     choice LCD_MODEL
         prompt "Select LCD Model"
+        # 根据 IDF 的 target 自动选择默认项（如果 IDF 导出了这些符号）
+        default LCD_MODEL_169 if IDF_TARGET_ESP32S3
+        default LCD_MODEL_114 if IDF_TARGET_ESP32C3
+        # 如果都不匹配，回落到 1.69（可选）
         default LCD_MODEL_169
+
         help
             Choose which LCD display to use
 
