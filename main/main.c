@@ -11,10 +11,11 @@ void app_main(void)
     // button_init();
     lcd_init();
     // lcd_clear(LCD_WHITE); // White
-    // lcd_set_pixel(0,0, LCD_GREEN);
-    // lcd_set_pixel(LCD_HOR_RESOLUTION-1,0, LCD_GREEN);
-    // lcd_set_pixel(0,LCD_VER_RESOLUTION-1, LCD_GREEN);
-    // lcd_set_pixel(LCD_HOR_RESOLUTION-1,LCD_VER_RESOLUTION-1, LCD_GREEN);
+    // uint16_t color = LCD_COLOR_GREEN;
+    // lcd_set_pixel(0,0, color);
+    // lcd_set_pixel(LCD_HOR_RESOLUTION-1,0, color);
+    // lcd_set_pixel(0,LCD_VER_RESOLUTION-1, color);
+    // lcd_set_pixel(LCD_HOR_RESOLUTION-1,LCD_VER_RESOLUTION-1, color);
     // lcd_printf_ascii('A');
     // lcd_printf_ascii('b');
     // lcd_printf_ascii('C');

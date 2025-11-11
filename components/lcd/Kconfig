@@ -1,0 +1,23 @@
+menu "LCD Configuration"
+
+    choice LCD_MODEL
+        prompt "Select LCD Model"
+        default LCD_MODEL_169
+        help
+            Choose which LCD display to use
+
+        config LCD_MODEL_169
+            bool "1.69 inch LCD (ST7789, 240x280)"
+            help
+                1.69 inch LCD display, 240x280 resolution
+                Typical parameters: gap_x=52, gap_y=40, invert_color=true
+
+        config LCD_MODEL_114
+            bool "1.14 inch LCD (ST7789, 135x240)"
+            help
+                1.14 inch LCD display, 135x240 resolution
+                Typical parameters: gap_x=0, gap_y=0, invert_color=false
+
+    endchoice
+
+endmenu

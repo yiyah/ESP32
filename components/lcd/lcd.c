@@ -177,22 +177,22 @@ void lcd_init(void)
 
     // Turn on the screen
     ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(lcd.panel_handle, true));
-    // ESP_ERROR_CHECK(esp_lcd_panel_invert_color(lcd.panel_handle, true));
+    ESP_ERROR_CHECK(esp_lcd_panel_invert_color(lcd.panel_handle, LCD_INVERT_COLOR));
 
     // Swap x and y axis (Different LCD screens may need different options)
     // ESP_ERROR_CHECK(esp_lcd_panel_swap_xy(lcd.panel_handle, true));
 
-    // esp_lcd_panel_set_gap(lcd.panel_handle, 52, 40);
+    esp_lcd_panel_set_gap(lcd.panel_handle, LCD_GAP_X, LCD_GAP_Y);
 
     // Turn on backlight (Different LCD screens may need different levels)
     ESP_ERROR_CHECK(gpio_set_level(PIN_NUM_BCKL, LCD_BK_LIGHT_ON_LEVEL));
 
-    lcd_clear(LCD_RED);
+    lcd_clear(LCD_COLOR_GREEN);
     lcd_flush();
 
     lcd.font = &font12x12;
-    lcd.color.fore = LCD_WHITE;
-    lcd.color.back = LCD_BLACK;
+    lcd.color.fore = LCD_COLOR_WHITE;
+    lcd.color.back = LCD_COLOR_BLACK;
     lcd.point.x = 0;
     lcd.point.y = 0;
 }
