@@ -25,26 +25,38 @@ extern "C" {
     #define LCD_GAP_X               0
     #define LCD_GAP_Y               20
     #define LCD_INVERT_COLOR        true    /* invert color for ST7789 */
+
+    /* PIN define */
+    #define PIN_NUM_MISO            GPIO_NUM_NC
+    #define PIN_NUM_MOSI            GPIO_NUM_11
+    #define PIN_NUM_CLK             GPIO_NUM_12
+    #define PIN_NUM_CS              GPIO_NUM_10
+    #define PIN_NUM_DC              GPIO_NUM_39
+    #define PIN_NUM_RST             GPIO_NUM_17
+    #define PIN_NUM_BCKL            GPIO_NUM_38
+
 #elif CONFIG_LCD_MODEL_114
     #define LCD_HOR_RESOLUTION      135     /* 水平 */
     #define LCD_VER_RESOLUTION      240     /* 垂直 */
     #define LCD_GAP_X               52
     #define LCD_GAP_Y               40
     #define LCD_INVERT_COLOR        true    /* invert color for ST7789 */
+
+    /* PIN define */
+    #define PIN_NUM_MISO            GPIO_NUM_NC
+    #define PIN_NUM_MOSI            GPIO_NUM_2
+    #define PIN_NUM_CLK             GPIO_NUM_1
+    #define PIN_NUM_CS              GPIO_NUM_0
+    #define PIN_NUM_DC              GPIO_NUM_3
+    #define PIN_NUM_RST             GPIO_NUM_4
+    #define PIN_NUM_BCKL            GPIO_NUM_5
+
 #else
     #error "No LCD model selected. Please set one in menuconfig."
 #endif
 
 #define LCD_ROWS                LCD_VER_RESOLUTION
 #define LCD_COLS                LCD_HOR_RESOLUTION
-
-#define PIN_NUM_MISO            GPIO_NUM_NC
-#define PIN_NUM_MOSI            GPIO_NUM_11
-#define PIN_NUM_CLK             GPIO_NUM_12
-#define PIN_NUM_CS              GPIO_NUM_10
-#define PIN_NUM_DC              GPIO_NUM_39
-#define PIN_NUM_RST             GPIO_NUM_17
-#define PIN_NUM_BCKL            GPIO_NUM_38
 
 #define PARALLEL_LINES          2
 #define MAX_TRANSFER_SIZE       (PARALLEL_LINES * LCD_HOR_RESOLUTION * 2 + 8)
