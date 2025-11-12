@@ -3,18 +3,18 @@
   "idf.espIdfPath": "/Users/yiya/tools/esp/esp-idf",
   "idf.pythonInstallPath": "/opt/homebrew/bin/python3",
   "idf.openOcdConfigs": [
-    "board/esp32-wrover-kit-3.3v.cfg"
+    "board/esp32s3-builtin.cfg"
   ],
-  "idf.port": "/dev/tty.wchusbserial1120",
+  "idf.port": "/dev/tty.usbmodem11201",
   "idf.toolsPath": "/Users/yiya/.espressif",
   "idf.customExtraVars": {
-    "IDF_TARGET": "esp32c3"
+    "IDF_TARGET": "esp32s3"
   },
   "clangd.path": "/Users/yiya/.espressif/tools/esp-clang/15.0.0-23786128ae/esp-clang/bin/clangd",
   "clangd.arguments": [
     "--background-index",
-    "--query-driver=/Users/yiya/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc",
-    "--compile-commands-dir=${workspaceFolder}/build"
+    "--query-driver=/Users/yiya/.espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc",
+    "--compile-commands-dir=/Users/yiya/code/esp32/hpanel_esp32c3/build"
   ],
   "idf.flashType": "UART",
   "files.associations": {
@@ -33,7 +33,8 @@
     "esp_lcd_panel_io.h": "c",
     "task.h": "c",
     "esp_lcd_panel_interface.h": "c",
-    "cstdlib": "c"
+    "cstdlib": "c",
+    "port_panel_conf.h": "c"
   },
   "conventionalCommits.scopes": [
     "button",

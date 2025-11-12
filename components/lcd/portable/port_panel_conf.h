@@ -1,10 +1,10 @@
 /**
- * @file lcd_conf.h
+ * @file port_panel_conf.h
  *
  */
 
-#ifndef LCD_CONF_H
-#define LCD_CONF_H
+#ifndef PORT_PANEL_CONF_H
+#define PORT_PANEL_CONF_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -13,18 +13,18 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
+/* Ensure generated configuration macros (CONFIG_*) are available */
+#include "sdkconfig.h"
 
 /*********************
  *      DEFINES
  *********************/
-
-/* LCD Model Selection (from Kconfig) */
-#ifdef CONFIG_LCD_MODEL_169
-    #define LCD_HOR_RESOLUTION      240     /* 水平 */
-    #define LCD_VER_RESOLUTION      280     /* 垂直 */
+#if defined(CONFIG_PANEL_MODEL_169)
     #define LCD_GAP_X               0
     #define LCD_GAP_Y               20
     #define LCD_INVERT_COLOR        true    /* invert color for ST7789 */
+    #define LCD_VER_RESOLUTION      240     /* w */
+    #define LCD_HOR_RESOLUTION      280     /* h */
 
     /* PIN define */
     #define PIN_NUM_MISO            GPIO_NUM_NC
@@ -35,12 +35,12 @@ extern "C" {
     #define PIN_NUM_RST             GPIO_NUM_17
     #define PIN_NUM_BCKL            GPIO_NUM_38
 
-#elif CONFIG_LCD_MODEL_114
-    #define LCD_HOR_RESOLUTION      135     /* 水平 */
-    #define LCD_VER_RESOLUTION      240     /* 垂直 */
+#elif defined(CONFIG_PANEL_MODEL_114)
     #define LCD_GAP_X               52
     #define LCD_GAP_Y               40
     #define LCD_INVERT_COLOR        true    /* invert color for ST7789 */
+    #define LCD_VER_RESOLUTION      135     /* w */
+    #define LCD_HOR_RESOLUTION      240     /* h */
 
     /* PIN define */
     #define PIN_NUM_MISO            GPIO_NUM_NC
@@ -52,20 +52,17 @@ extern "C" {
     #define PIN_NUM_BCKL            GPIO_NUM_5
 
 #else
-    #error "No LCD model selected. Please set one in menuconfig."
+    #error "No PANEL model selected. Please set one in menuconfig."
 #endif
 
-#define LCD_ROWS                LCD_VER_RESOLUTION
-#define LCD_COLS                LCD_HOR_RESOLUTION
+#define PARALLEL_LINES              2
+#define MAX_TRANSFER_SIZE           (PARALLEL_LINES * LCD_HOR_RESOLUTION * 2 + 8)
 
-#define PARALLEL_LINES          2
-#define MAX_TRANSFER_SIZE       (PARALLEL_LINES * LCD_HOR_RESOLUTION * 2 + 8)
+#define LCD_HOST                    SPI2_HOST
+#define LCD_SPI_CLOCK_HZ            40000000    /* 40 MHz */
 
-#define LCD_HOST                SPI2_HOST
-#define LCD_SPI_CLOCK_HZ        20000000    /* 40 MHz */
-
-#define LCD_BK_LIGHT_OFF_LEVEL  1
-#define LCD_BK_LIGHT_ON_LEVEL   (!LCD_BK_LIGHT_OFF_LEVEL)
+#define LCD_BK_LIGHT_OFF_LEVEL      1
+#define LCD_BK_LIGHT_ON_LEVEL       (!LCD_BK_LIGHT_OFF_LEVEL)
 
 /**********************
  *      TYPEDEFS
@@ -80,7 +77,7 @@ extern "C" {
  **********************/
 
 #ifdef __cplusplus
-} /* extern "C" */
+} /*extern "C"*/
 #endif
 
-#endif /* LCD_CONF_H */
+#endif /*PORT_PANEL_CONF_H*/

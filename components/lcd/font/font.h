@@ -1,7 +1,28 @@
-#ifndef __FONT_H
-#define __FONT_H
-#include "stdint.h"
-#include "string.h"
+/**
+ * @file font.h
+ *
+ */
+
+#ifndef FONT_H
+#define FONT_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*********************
+ *      INCLUDES
+ *********************/
+#include <stdint.h>
+
+/*********************
+ *      DEFINES
+ *********************/
+
+/**********************
+ *      TYPEDEFS
+ **********************/
+
 typedef struct ASCIIFont {
   uint8_t h;
   uint8_t w;
@@ -21,9 +42,6 @@ typedef struct Font {
   const ASCIIFont *ascii; // 缺省ASCII字体 当字库中没有对应字符且需要显示ASCII字符时使用
 } Font;
 
-extern const Font font12x12;
-extern const Font font16x16;
-
 /**
  * @brief 图片结构体
  * @note  图片数据可以使用波特律动LED取模助手生成(https://led.baud-dance.com)
@@ -34,6 +52,34 @@ typedef struct Image {
   const uint8_t *data; // 图片数据
 } Image;
 
+/**********************
+ * GLOBAL PROTOTYPES
+ **********************/
+
+/**
+ * ASCII 字体库
+ */
+extern const ASCIIFont afont8x6;
+extern const ASCIIFont afont12x6;
+extern const ASCIIFont afont16x8;
+extern const ASCIIFont afont24x12;
+
+/**
+ * 汉字字体库
+ */
+extern const Font font16x16;
+
+/**
+ * 图片库
+ */
 extern const Image bilibiliImg;
 
-#endif // __FONT_H
+/**********************
+ *      MACROS
+ **********************/
+
+#ifdef __cplusplus
+} /*extern "C"*/
+#endif
+
+#endif /*FONT_H*/

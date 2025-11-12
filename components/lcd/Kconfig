@@ -1,24 +1,24 @@
-menu "LCD Configuration"
+menu "Panel Configuration"
 
-    choice LCD_MODEL
-        prompt "Select LCD Model"
+    choice PANEL_MODEL
+        prompt "Select PANEL Model"
         # 根据 IDF 的 target 自动选择默认项（如果 IDF 导出了这些符号）
-        default LCD_MODEL_169 if IDF_TARGET_ESP32S3
-        default LCD_MODEL_114 if IDF_TARGET_ESP32C3
+        default PANEL_MODEL_169 if IDF_TARGET_ESP32S3
+        default PANEL_MODEL_114 if IDF_TARGET_ESP32C3
         # 如果都不匹配，回落到 1.69（可选）
-        default LCD_MODEL_169
+        default PANEL_MODEL_169
 
         help
-            Choose which LCD display to use
+            Choose which panel display to use
 
-        config LCD_MODEL_169
-            bool "1.69 inch LCD (ST7789, 240x280)"
+        config PANEL_MODEL_169
+            bool "1.69 inch Panel (ST7789, 240x280)"
             help
                 1.69 inch LCD display, 240x280 resolution
                 Typical parameters: gap_x=52, gap_y=40, invert_color=true
 
-        config LCD_MODEL_114
-            bool "1.14 inch LCD (ST7789, 135x240)"
+        config PANEL_MODEL_114
+            bool "1.14 inch Panel (ST7789, 135x240)"
             help
                 1.14 inch LCD display, 135x240 resolution
                 Typical parameters: gap_x=0, gap_y=0, invert_color=false
