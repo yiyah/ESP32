@@ -22,18 +22,18 @@ extern "C" {
 #if defined(CONFIG_PANEL_MODEL_169)
     #define PANEL_HOR_RESOLUTION    240     /* 水平有多少像素，即 w */
     #define PANEL_VER_RESOLUTION    280     /* 垂直有多少像素，即 h */
-
+    #define PANEL_BITS_PER_PIXEL    16      /* RGB显示屏 */
 #elif defined(CONFIG_PANEL_MODEL_114)
     #define PANEL_HOR_RESOLUTION    135     /* 水平有多少像素，即 w */
     #define PANEL_VER_RESOLUTION    240     /* 垂直有多少像素，即 h */
-
+    #define PANEL_BITS_PER_PIXEL    16      /* RGB显示屏 */
 #else
     #error "No PANEL model selected. Please set one in menuconfig."
 #endif
 
 #define PANEL_ROWS                  PANEL_VER_RESOLUTION
 #define PANEL_COLS                  PANEL_HOR_RESOLUTION
-
+#define PANEL_BYTES_PER_PIXEL       (((PANEL_BITS_PER_PIXEL) + 7) / 8)
 /**********************
  *      TYPEDEFS
  **********************/

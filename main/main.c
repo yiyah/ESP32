@@ -12,6 +12,9 @@ void app_main(void)
     panel_init();
     panel_set_color(PANEL_COLOR_WHITE, PANEL_COLOR_BLUE);
     panel_clear();
+    panel_set_cursor(10, 10);
+    panel_set_ascii_font(&afont24x12);
+    panel_printf("Hello, HPanel!123456778901234567890");
     panel_flush();
     while (1) {
         ESP_LOGE(TAG, "Main task running...");
