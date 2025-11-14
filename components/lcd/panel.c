@@ -50,7 +50,7 @@ static panel_t s_panel;
  **********************/
 #define GET_GRAM_INDEX(x, y)        (((y)*PANEL_COLS + (x)) * PANEL_BYTES_PER_PIXEL)
 #define GET_BYTES_PER_CHAR_ROW_ROW(w, h)    ((((w) + 7) / 8) * (h)) // 逐行式字模数据每个字符占用的字节数
-#define GET_BYTES_PER_CHAR_COL_ROW(w, h)    ((((h) + 7) / 8) * (w)) // 逐列式字模数据每个字符占用的字节数
+#define GET_BYTES_PER_CHAR_COL_ROW(w, h)    ((((h) + 7) / 8) * (w)) // 列行式字模数据每个字符占用的字节数
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
