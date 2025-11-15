@@ -39,7 +39,6 @@ void panel_printf_ascii(uint16_t x, uint16_t y, uint8_t data, const ASCIIFont* a
 void panel_set_color(uint16_t fore, uint16_t back);
 void panel_set_cursor(uint16_t x, uint16_t y);
 void panel_set_font(const Font* font);
-void panel_set_ascii_font(const ASCIIFont* afont);
 void panel_draw_image(const Image* img);
 void panel_flush(void);
 void panel_clear();

@@ -23,7 +23,7 @@
 typedef struct panel
 {
     uint8_t gram[PANEL_ROWS * PANEL_COLS * PANEL_BYTES_PER_PIXEL];
-    Font* font;
+    const Font* font;
 
     struct
     {
@@ -128,11 +128,6 @@ void panel_set_cursor(uint16_t x, uint16_t y)
 void panel_set_font(const Font* font)
 {
     s_panel.font = font;
-}
-
-void panel_set_ascii_font(const ASCIIFont* afont)
-{
-    s_panel.font->ascii = afont;
 }
 
 void panel_draw_image(const Image* img)
