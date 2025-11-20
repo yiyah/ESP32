@@ -13,7 +13,7 @@ extern "C" {
 /*********************
  *      INCLUDES
  *********************/
-
+#include "hs_err.h"
 /*********************
  *      DEFINES
  *********************/
@@ -48,11 +48,23 @@ extern "C" {
 /**********************
  *      TYPEDEFS
  **********************/
-
+typedef enum {
+    MOTION_NONE             = 0x00,
+    MOTION_DOUBLE_CLICK     = 0x01,         /*!< bit0 */
+    MOTION_LEFT_RIGHT       = 0x02,         /*!< bit1 */
+    MOTION_UP_DOWN          = 0x04,         /*!< bit2 */
+    MOTION_ALL_ENABLE       = 0x07,
+} cst816_motion_t;
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
 
+void cst816_init(void);
+void cst816_reset(void);
+hs_err_t cst816_get_touch_point(uint16_t* x, uint16_t* y);
+uint8_t cst816_get_touch_point_num(void);
+uint8_t cst816_get_chip_id(void);
+hs_err_t cst816_enable_motion(cst816_motion_t motion);
 /**********************
  *      MACROS
  **********************/
