@@ -9,4 +9,5 @@ idf_component_register(
         "portable"
     REQUIRES
         driver
+        common
 )

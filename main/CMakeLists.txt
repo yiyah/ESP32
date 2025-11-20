@@ -6,5 +6,5 @@ idf_component_register(
     REQUIRES
         app_button
         lcd
-        input
+        touch
 )

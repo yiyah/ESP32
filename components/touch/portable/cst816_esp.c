@@ -9,6 +9,7 @@
 #include "driver/gpio.h"
 #include "driver/i2c.h"
 #include "esp_log.h"
+#include "hs_err.h"
 
 /*********************
  *      DEFINES
@@ -44,12 +45,16 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-static int iic_write_bytes(i2c_port_t i2c_num, uint8_t dev_addr, uint8_t reg_addr, uint8_t* pdata, size_t data_len);
-static esp_err_t iic_read_bytes(i2c_port_t i2c_num,
-                                uint8_t    slave_addr,
-                                uint8_t    slave_reg,
-                                uint8_t    *data_rd,
-                                size_t     size);
+static esp_err_t iic_write_bytes(i2c_port_t i2c_num,
+                                 uint8_t    dev_addr,
+                                 uint8_t    reg_addr,
+                                 uint8_t*   pdata,
+                                 size_t     data_len);
+static esp_err_t iic_read_bytes(i2c_port_t  i2c_num,
+                                uint8_t     dev_addr,
+                                uint8_t     reg_addr,
+                                uint8_t*    pdata,
+                                size_t      data_len);
 /**********************
  *  STATIC VARIABLES
  **********************/
@@ -101,25 +106,25 @@ void port_iic_init()
     ESP_LOGI(TAG, "I2C initialized successfully");
 }
 
-int port_iic_write_to_device(uint8_t reg, uint8_t data, size_t len)
+hs_err_t port_iic_write_to_device(uint8_t reg, uint8_t data, size_t len)
 {
     return iic_write_bytes(I2C_MASTER_NUM, CST816_I2C_ADDR, reg, &data, len);
 }
 
-int port_iic_read_from_device(uint8_t reg, uint8_t* data, size_t len)
+hs_err_t port_iic_read_from_device(uint8_t reg, uint8_t* data, size_t len)
 {
     return iic_read_bytes(I2C_MASTER_NUM, CST816_I2C_ADDR, reg, data, len);
 }
 
-void port_reset_pin_set_level(uint8_t level)
+hs_err_t port_reset_pin_set_level(uint8_t level)
 {
-    gpio_set_level(PIN_NUM_RESET, level);
+    return gpio_set_level(PIN_NUM_RESET, level);
 }
 
 /**********************
  *   STATIC FUNCTIONS
  **********************/
-static int iic_write_bytes(i2c_port_t i2c_num, uint8_t dev_addr, uint8_t reg_addr, uint8_t* pdata, size_t data_len)
+static esp_err_t iic_write_bytes(i2c_port_t i2c_num, uint8_t dev_addr, uint8_t reg_addr, uint8_t* pdata, size_t data_len)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
@@ -138,34 +143,34 @@ static int iic_write_bytes(i2c_port_t i2c_num, uint8_t dev_addr, uint8_t reg_add
     return ret;
 }
 
-static esp_err_t iic_read_bytes(i2c_port_t i2c_num,
-                                uint8_t    slave_addr,
-                                uint8_t    slave_reg,
-                                uint8_t    *data_rd,
-                                size_t     size)
+static esp_err_t iic_read_bytes(i2c_port_t  i2c_num,
+                                uint8_t     dev_addr,
+                                uint8_t     reg_addr,
+                                uint8_t*    pdata,
+                                size_t      data_len)
 {
     esp_err_t ret = ESP_OK;
 
-    if (size == 0) {
+    if (data_len == 0) {
         ret = ESP_OK;
     } else {
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
         /* step1: write a register to slave to read */
         i2c_master_start(cmd);
-        i2c_master_write_byte(cmd, (slave_addr << 1) | I2C_MASTER_READ, true);
-        i2c_master_write_byte(cmd, slave_reg, true);
+        i2c_master_write_byte(cmd, (dev_addr << 1) | I2C_MASTER_READ, true);
+        i2c_master_write_byte(cmd, reg_addr, true);
 
         /* step2: read byte from slave */
         i2c_master_start(cmd);
-        i2c_master_write_byte(cmd, (slave_addr << 1) | I2C_MASTER_READ, true);
-        if (size > 1) {
-            i2c_master_read(cmd, data_rd, size - 1, I2C_MASTER_ACK);
+        i2c_master_write_byte(cmd, (dev_addr << 1) | I2C_MASTER_READ, true);
+        if (data_len > 1) {
+            i2c_master_read(cmd, pdata, data_len - 1, I2C_MASTER_ACK);
         }
         /* Read the last byte, we need to send a NACK
          * to prevent the slave device from continuing to send data.
          */
-        i2c_master_read_byte(cmd, data_rd + size - 1, I2C_MASTER_NACK);
+        i2c_master_read_byte(cmd, pdata + data_len - 1, I2C_MASTER_NACK);
         i2c_master_stop(cmd);
 
         ret = i2c_master_cmd_begin(i2c_num, cmd, 1000 / portTICK_PERIOD_MS);

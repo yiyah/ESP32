@@ -47,14 +47,14 @@ void cst816_init(void)
     port_gpio_init();
 }
 
-void cst816_read_register(uint8_t reg, uint8_t* pdata)
+hs_err_t cst816_read_register(uint8_t reg, uint8_t* pdata)
 {
-    port_iic_read_register(reg, pdata);
+    return port_iic_read_register(reg, pdata);
 }
 
-void cst816_write_register(uint8_t reg, uint8_t data)
+hs_err_t cst816_write_register(uint8_t reg, uint8_t data)
 {
-    port_iic_write_register(reg, data);
+    return port_iic_write_register(reg, data);
 }
 
 void cst816_reset(void)
@@ -65,9 +65,9 @@ void cst816_reset(void)
     vTaskDelay(pdMS_TO_TICKS(100));
 }
 
-int cst816_get_touch_point(uint16_t* x, uint16_t* y)
+hs_err_t cst816_get_touch_point(uint16_t* x, uint16_t* y)
 {
-    int ret = 0;
+    hs_err_t ret = 0;
     uint8_t buf[4] = {0};
 
     if (0 == port_iic_read_from_device(REG_XPOS_H, buf, 4)) {
@@ -85,7 +85,9 @@ uint8_t cst816_get_touch_point_num(void)
 {
     uint8_t num = 0;
 
-    cst816_read_register(REG_FINGER_NUM, &num);
+    if (HS_OK != cst816_read_register(REG_FINGER_NUM, &num)) {
+        num = 0xFF; // read failed
+    }
 
     return num;
 }
