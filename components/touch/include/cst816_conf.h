@@ -1,10 +1,10 @@
 /**
- * @file lv_templ.h
+ * @file cst816_conf.h
  *
  */
 
-#ifndef INPUT_DEVICE_INTERFACE_H
-#define INPUT_DEVICE_INTERFACE_H
+#ifndef CST816_CONF_H
+#define CST816_CONF_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,13 +21,7 @@ extern "C" {
 /**********************
  *      TYPEDEFS
  **********************/
-typedef input_device_interface_t input_device_interface_t;
 
-struct input_device_interface_t
-{
-    void (*init)(void);
-    void (*read)(void);
-};
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
@@ -37,7 +31,7 @@ struct input_device_interface_t
  **********************/
 
 #ifdef __cplusplus
-} /*extern "C"*/
+} /* extern "C" */
 #endif
 
-#endif /*INPUT_DEVICE_INTERFACE_H*/
+#endif /* CST816_CONF_H */
