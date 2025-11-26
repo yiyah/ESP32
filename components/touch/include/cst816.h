@@ -43,18 +43,43 @@ extern "C" {
 #define REG_AUTO_RESET          0xFB        // 触摸屏自动复位相关
 #define REG_LONG_PRESS_TIME     0xFC        // 触摸屏的长按时间
 #define REG_IO_CTL              0xFD        // 触摸屏的输入输出控制
-#define REG_DIS_AUTO_SLEEP      0xFE        // 禁止触摸屏自动进入睡眠模式
+#define REG_DIS_AUTO_SLEEP      0xFE        /*!< 0: 使能自动进入 low power mode
+                                                !0: 禁止进入 low power mode */
 
 /**********************
  *      TYPEDEFS
  **********************/
+
+/* 连续动作配置选项: REG_MOTION_MASK */
 typedef enum {
-    MOTION_NONE             = 0x00,
-    MOTION_DOUBLE_CLICK     = 0x01,         /*!< bit0 */
-    MOTION_LEFT_RIGHT       = 0x02,         /*!< bit1 */
-    MOTION_UP_DOWN          = 0x04,         /*!< bit2 */
-    MOTION_ALL_ENABLE       = 0x07,
+    MOTION_NONE             = 0x00,         /*!< 禁止连续动作 */
+    MOTION_DOUBLE_CLICK     = 0x01,         /*!< bit0: 双击 */
+    MOTION_LEFT_RIGHT       = 0x02,         /*!< bit1: 左右滑动 */
+    MOTION_UP_DOWN          = 0x04,         /*!< bit2: 上下滑动 */
+    MOTION_ALL_ENABLE       = 0x07,         /*!< bit0~bit2: 启用所有连续动作 */
 } cst816_motion_t;
+
+/* REG_IRQ_CTL */
+#define IRQ_CTL_ONCEWLP_POS     0
+#define IRQ_CTL_ONCEWLP_MASK    (0x1U << IRQ_CTL_ONCEWLP_POS)
+#define IRQ_CTL_ONCEWLP         IRQ_CTL_ONCEWLP_MASK
+
+#define IRQ_CTL_ENMOTION_POS    4
+#define IRQ_CTL_ENMOTION_MASK   (0x1U << IRQ_CTL_ENMOTION_POS)
+#define IRQ_CTL_ENMOTION        IRQ_CTL_ENMOTION_MASK
+
+#define IRQ_CTL_ENCHANGE_POS    5
+#define IRQ_CTL_ENCHANGE_MASK   (0x1U << IRQ_CTL_ENCHANGE_POS)
+#define IRQ_CTL_ENCHANGE        IRQ_CTL_ENCHANGE_MASK
+
+#define IRQ_CTL_ENTOUCH_POS     6
+#define IRQ_CTL_ENTOUCH_MASK    (0x1U << IRQ_CTL_ENTOUCH_POS)
+#define IRQ_CTL_ENTOUCH         IRQ_CTL_ENTOUCH_MASK
+
+#define IRQ_CTL_ENTEST_POS      7
+#define IRQ_CTL_ENTEST_MASK     (0x1U << IRQ_CTL_ENTEST_POS)
+#define IRQ_CTL_ENTEST          IRQ_CTL_ENTEST_MASK
+
 /**********************
  * GLOBAL PROTOTYPES
  **********************/

@@ -43,8 +43,12 @@ static hs_err_t cst816_write_register(uint8_t reg, uint8_t data);
 void cst816_init(void)
 {
     // 初始化 IIC 和 GPIO
-    port_iic_init();
     port_gpio_init();
+    cst816_reset();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    port_iic_init();
+
+    cst816_enable_motion(MOTION_ALL_ENABLE);
 }
 
 void cst816_reset(void)
@@ -52,7 +56,7 @@ void cst816_reset(void)
     port_reset_pin_set_level(0);
     vTaskDelay(pdMS_TO_TICKS(10));
     port_reset_pin_set_level(1);
-    vTaskDelay(pdMS_TO_TICKS(100));
+    vTaskDelay(pdMS_TO_TICKS(10));
 }
 
 hs_err_t cst816_get_touch_point(uint16_t* x, uint16_t* y)
@@ -70,9 +74,16 @@ hs_err_t cst816_get_touch_point(uint16_t* x, uint16_t* y)
     return ret;
 }
 
+/**
+ * @brief 获取当前触摸点的数量
+ *
+ * @return 0：无手指
+ *         1：1个手指
+ *         0xFF：读取失败
+ */
 uint8_t cst816_get_touch_point_num(void)
 {
-    uint8_t num = 0;
+    uint8_t num = 0xFF;
 
     if (HS_OK != cst816_read_register(REG_FINGER_NUM, &num)) {
         num = 0xFF; // read failed
@@ -83,11 +94,10 @@ uint8_t cst816_get_touch_point_num(void)
 
 uint8_t cst816_get_chip_id(void)
 {
-    uint8_t chip_id = 0xFF;
+    uint8_t chip_id = 0x0;
 
     if (HS_OK != cst816_read_register(REG_CHIP_ID, &chip_id)) {
-        chip_id = 0x0; // read failed
-        printf("CST816 read chip id failed!\n");
+        chip_id = 0xFF; // read failed
     }
 
     return chip_id;
@@ -96,6 +106,28 @@ uint8_t cst816_get_chip_id(void)
 hs_err_t cst816_enable_motion(cst816_motion_t motion)
 {
     return cst816_write_register(REG_MOTION_MASK, (uint8_t)motion);
+}
+
+/**
+ * @brief x 秒内无触摸时，自动进入低功耗模式
+ * @param time_s unit: seconds. 0: disable auto sleep
+ */
+hs_err_t cst816_set_auto_sleep_time(uint8_t time_s)
+{
+    hs_err_t ret = HS_OK;
+
+    if (time_s == 0) {
+        ret = cst816_write_register(REG_DIS_AUTO_SLEEP, 1U);
+    } else {
+        ret = cst816_write_register(REG_AUTO_SLEEP_TIME, time_s);
+    }
+
+    return ret;
+}
+
+hs_err_t cst816_set_sleep_mode(bool enable)
+{
+    return cst816_write_register(REG_SLEEP_MODE, enable ? 1U : 0U);
 }
 
 /**********************
