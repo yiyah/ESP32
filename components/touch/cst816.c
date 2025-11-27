@@ -110,6 +110,7 @@ hs_err_t cst816_enable_motion(cst816_motion_t motion)
 
 /**
  * @brief x 秒内无触摸时，自动进入低功耗模式
+ * TODO: NEED TEST
  * @param time_s unit: seconds. 0: disable auto sleep
  */
 hs_err_t cst816_set_auto_sleep_time(uint8_t time_s)
@@ -125,9 +126,11 @@ hs_err_t cst816_set_auto_sleep_time(uint8_t time_s)
     return ret;
 }
 
-hs_err_t cst816_set_sleep_mode(bool enable)
+hs_err_t cst816_set_irq_pulse_width(uint8_t width)
 {
-    return cst816_write_register(REG_SLEEP_MODE, enable ? 1U : 0U);
+    width = (width > 200) ? 200 : width;
+
+    return cst816_write_register(REG_IRQ_PULSE_WIDTH, width);
 }
 
 /**********************

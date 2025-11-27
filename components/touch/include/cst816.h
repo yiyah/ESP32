@@ -90,6 +90,9 @@ hs_err_t cst816_get_touch_point(uint16_t* x, uint16_t* y);
 uint8_t cst816_get_touch_point_num(void);
 uint8_t cst816_get_chip_id(void);
 hs_err_t cst816_enable_motion(cst816_motion_t motion);
+hs_err_t cst816_set_auto_sleep_time(uint8_t time_s);
+hs_err_t cst816_set_irq_pulse_width(uint8_t width);
+
 /**********************
  *      MACROS
  **********************/
