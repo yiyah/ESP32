@@ -126,6 +126,13 @@ hs_err_t cst816_set_auto_sleep_time(uint8_t time_s)
     return ret;
 }
 
+/**
+ * @brief 设置中断低脉冲输出宽度
+ * @details 该寄存器默认值为10
+ * @todo 有空量下是不是200代表20ms
+ *
+ * @param width 脉冲宽度，单位 0.1 ms
+ */
 hs_err_t cst816_set_irq_pulse_width(uint8_t width)
 {
     width = (width > 200) ? 200 : width;

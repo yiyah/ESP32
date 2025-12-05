@@ -66,6 +66,12 @@ static esp_err_t iic_read_bytes(i2c_port_t  i2c_num,
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
+
+static void IRAM_ATTR gpio_isr_handler(void* arg)
+{
+    uint32_t gpio_num = (uint32_t) arg;
+}
+
 void port_gpio_init()
 {
     bool need_pullup = (RESET_ACTIVE_LEVEL == 0) ? true : false;
@@ -88,6 +94,10 @@ void port_gpio_init()
     io_conf.pull_down_en = need_pullup ? GPIO_PULLDOWN_DISABLE : GPIO_PULLDOWN_ENABLE;
     io_conf.pull_up_en = need_pullup ? GPIO_PULLUP_ENABLE : GPIO_PULLUP_DISABLE;
     gpio_config(&io_conf);
+    //install gpio isr service
+    gpio_install_isr_service(ESP_INTR_FLAG_IRAM);
+    //hook isr handler for specific gpio pin
+    gpio_isr_handler_add(PIN_NUM_INT, gpio_isr_handler, (void*) PIN_NUM_INT);
 }
 
 void port_iic_init()
