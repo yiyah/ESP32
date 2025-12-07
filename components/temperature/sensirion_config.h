@@ -29,8 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SENSIRION_ARCH_CONFIG_H
-#define SENSIRION_ARCH_CONFIG_H
+#ifndef SENSIRION_CONFIG_H
+#define SENSIRION_CONFIG_H
 
 /**
  * If your platform does not provide the library stdlib.h you have to remove the
@@ -62,7 +62,8 @@
  * typedef short int16_t;
  * typedef unsigned short uint16_t;
  * typedef char int8_t;
- * typedef unsigned char uint8_t; */
+ * typedef unsigned char uint8_t;
+ */
 
 #ifndef __cplusplus
 
@@ -84,13 +85,4 @@
 
 #endif /* __cplusplus */
 
-/**
- * The clock period of the i2c bus in microseconds. Increase this, if your GPIO
- * ports cannot support a 200 kHz output rate. (2 * 1 / 10usec == 200Khz)
- *
- * This is only relevant for the sw-i2c HAL (bit-banging on GPIO pins). The
- * pulse length is half the clock period, the number should thus be even.
- */
-#define SENSIRION_I2C_CLOCK_PERIOD_USEC 10
-
-#endif /* SENSIRION_ARCH_CONFIG_H */
+#endif /* SENSIRION_CONFIG_H */
