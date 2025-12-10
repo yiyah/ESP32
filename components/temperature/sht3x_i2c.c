@@ -36,6 +36,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+ #include "esp_log.h"
+
 #include "sht3x_i2c.h"
 #include "sensirion_common.h"
 #include "sensirion_i2c.h"
@@ -650,6 +652,7 @@ int16_t sht3x_stop_measurement() {
     local_error =
         sensirion_i2c_write_data(_i2c_address, buffer_ptr, local_offset);
     if (local_error != NO_ERROR) {
+        ESP_LOGE("sht3x", "Error stopping measurement: %d", local_error);
         return local_error;
     }
     sensirion_i2c_hal_sleep_usec(1 * 1000);

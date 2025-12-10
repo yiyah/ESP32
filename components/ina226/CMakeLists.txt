@@ -2,11 +2,11 @@
 
 idf_component_register(
     SRCS
-        "cst816.c"
-        "portable/cst816_esp.c"
+        "driver_ina226_interface.c"
+        "driver_ina226.c"
     INCLUDE_DIRS
         "include"
-        "portable"
+        "."
     REQUIRES
         driver
         hs_common

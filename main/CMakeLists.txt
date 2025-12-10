@@ -7,4 +7,6 @@ idf_component_register(
         app_button
         lcd
         touch
+        temperature
+        ina226
 )

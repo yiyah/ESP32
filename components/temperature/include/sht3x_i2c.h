@@ -43,7 +43,7 @@
 extern "C" {
 #endif
 
-#include "sensirion_config.h"
+#include "../sensirion_config.h"
 #define SHT30A_I2C_ADDR_44 0x44
 #define SHT30A_I2C_ADDR_45 0x45
 #define SHT30_I2C_ADDR_44 0x44
