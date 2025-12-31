@@ -10,6 +10,26 @@
       "type": "espidf",
       "name": "Launch",
       "request": "launch"
+    },
+    {
+      "name": "LLDB: Debug test_panel (host-debug)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/components/panel/test/build-host/test_panel",
+      "args": [],
+      "cwd": "${workspaceFolder}/components/panel/test/build-host",
+      "preLaunchTask": "cmake: build (host-debug)",
+      "stopOnEntry": false
+    },
+    {
+      "name": "LLDB: Debug test_panel (ASan)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/components/panel/test/build-host-asan/test_panel",
+      "args": [],
+      "cwd": "${workspaceFolder}/components/panel/test/build-host-asan",
+      "preLaunchTask": "cmake: build (host-asan)",
+      "stopOnEntry": false
     }
   ]
 }
