@@ -34,31 +34,28 @@ static panel_handle_t s_panel_handle_list = NULL;
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
-panel_status_t panel_init(const char* driver_name, panel_handle_t *handle_out, panel_config_t* config)
+panel_status_t panel_init(const char* driver_name, const panel_config_t* config, panel_handle_t *ret_handle)
 {
     panel_status_t ret = PANEL_OK;
 
-    if (driver_name == NULL) {
+    if (driver_name == NULL || config == NULL || ret_handle == NULL) {
         return PANEL_ERR_INVALID_ARG;
     }
 
     panel_handle_t found = _find_driver_handle(driver_name);
     if (found == NULL) {
-        return PANEL_ERR_UNKNOWN;
+        return PANEL_ERR_NO_RESOURCE;
     }
 
     if (found->ops == NULL || found->ops->init == NULL) {
         return PANEL_ERR_UNSUPPORTED;
     }
 
-    /* apply config if provided */
-    if (config) {
-        found->cfg = *config;
-    }
+    found->cfg = *config;
 
     ret = found->ops->init(found);
-    if (ret == PANEL_OK && handle_out != NULL) {
-        *handle_out = found;
+    if (ret == PANEL_OK) {
+        *ret_handle = found;
     }
 
     return ret;

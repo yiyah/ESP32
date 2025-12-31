@@ -61,7 +61,7 @@ typedef struct panel {
     struct panel* next;
 
     const char* driver_name;
-    const panel_config_t cfg;
+    panel_config_t cfg;
     const panel_ops_t *ops;
     uint8_t *framebuf; /* framebuffer */
 } panel_t;
@@ -71,7 +71,7 @@ typedef struct panel {
  **********************/
 
 /* for APP */
-panel_status_t panel_init(const char* driver_name, panel_handle_t *handle_out, panel_config_t* config);
+panel_status_t panel_init(const char* driver_name, const panel_config_t* config, panel_handle_t *ret_handle);
 panel_status_t panel_draw(panel_handle_t handle, int x, int y, int w, int h, const uint8_t* data);
 panel_status_t panel_clear(panel_handle_t handle);
 panel_status_t panel_flush(panel_handle_t handle);

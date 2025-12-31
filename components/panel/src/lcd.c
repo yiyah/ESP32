@@ -1,15 +1,18 @@
 /**
- * @file bsp.c
+ * @file lcd.c
  *
  */
 
 /*********************
  *      INCLUDES
  *********************/
-#include "driver_st7789v_esp32.h"
+#include "panel.h"
 /*********************
  *      DEFINES
  *********************/
+
+#define LCD_VER_RESOLUTION      240     /* w */
+#define LCD_HOR_RESOLUTION      280     /* h */
 
 /**********************
  *      TYPEDEFS
@@ -22,6 +25,7 @@
 /**********************
  *  STATIC VARIABLES
  **********************/
+static panel_handle_t s_panel_handle = NULL;
 
 /**********************
  *      MACROS
@@ -30,15 +34,18 @@
 /**********************
  *   GLOBAL FUNCTIONS
  **********************/
-void bsp_init(void)
+void lcd_init(void)
 {
-    // 初始化各个外设
-    driver_st7789v_init();
-    // lcd_init();
-    // touch_init();
-    // i2c_init();
-    // ...
+    panel_config_t cfg = {
+        .width = LCD_VER_RESOLUTION,
+        .height = LCD_HOR_RESOLUTION,
+        .bpp = 16,
+        .rotation = 0,
+        .user_data = NULL
+    };
+    panel_init("st7789v", &cfg, &s_panel_handle);
 }
+
 /**********************
  *   STATIC FUNCTIONS
  **********************/

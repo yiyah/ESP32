@@ -27,14 +27,14 @@ void app(void)
         .rotation = 0,
         .user_data = NULL
     };
-    ret = panel_init("test_panel_driver1", &handle1, &cfg);
+    ret = panel_init("test_panel_driver1", &cfg, &handle1);
     if (ret != PANEL_OK) {
         LOGG("panel_init failed with error code: %d\n", ret);
     } else {
         LOGG("panel_init succeeded\n");
     }
 
-    ret = panel_init("test_panel_driver2", &handle2, &cfg);
+    ret = panel_init("test_panel_driver2", &cfg, &handle2);
     if (ret != PANEL_OK) {
         LOGG("panel_init failed with error code: %d\n", ret);
     } else {
