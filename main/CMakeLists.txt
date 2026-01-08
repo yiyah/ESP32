@@ -7,4 +7,6 @@ idf_component_register(
     REQUIRES
         app_button
         panel
+        temperature
+        ina226
 )
