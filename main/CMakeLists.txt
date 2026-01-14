@@ -1,11 +1,14 @@
+set(srcs "main.c"
+        "app_task.c")
+
 idf_component_register(
     SRCS
-        "main.c"
-        "bsp.c"
-        "bsp_i2c.c"
+        ${srcs}
     INCLUDE_DIRS
         "."
     REQUIRES
+        bsp
+        common
         sht3x
         ina226
 )

@@ -1,10 +1,10 @@
 /**
- * @file ina226.h
+ * @file bsp_i2c.h
  *
  */
 
-#ifndef INA226_H
-#define INA226_H
+#ifndef BSP_I2C_H
+#define BSP_I2C_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,7 +25,9 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
-void ina226_main(void *pvParameters);
+
+void i2c_init(void);
+void i2c_found_device(void);
 
 /**********************
  *      MACROS
@@ -35,4 +37,4 @@ void ina226_main(void *pvParameters);
 } /* extern "C" */
 #endif
 
-#endif /* INA226_H */
+#endif /* BSP_I2C_H */

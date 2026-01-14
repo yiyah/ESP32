@@ -12,5 +12,6 @@ idf_component_register(
         "src"
         "."
     REQUIRES
+        common
         esp_driver_i2c
 )

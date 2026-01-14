@@ -1,10 +1,10 @@
 /**
- * @file ina226.h
+ * @file app_task.h
  *
  */
 
-#ifndef INA226_H
-#define INA226_H
+#ifndef APP_TASK_H
+#define APP_TASK_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,7 +25,8 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
-void ina226_main(void *pvParameters);
+void app_task_init(void);
+QueueHandle_t app_task_get_ina226_queue(void);
 
 /**********************
  *      MACROS
@@ -35,4 +36,4 @@ void ina226_main(void *pvParameters);
 } /* extern "C" */
 #endif
 
-#endif /* INA226_H */
+#endif /* APP_TASK_H */

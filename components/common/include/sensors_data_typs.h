@@ -1,10 +1,10 @@
 /**
- * @file ina226.h
+ * @file sensors_data_typs.h
  *
  */
 
-#ifndef INA226_H
-#define INA226_H
+#ifndef SENSOR_DATA_TYPES_H
+#define SENSOR_DATA_TYPES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,11 +21,15 @@ extern "C" {
 /**********************
  *      TYPEDEFS
  **********************/
+typedef struct {
+    float voltage;    /**< Voltage in mV */
+    float current;    /**< Current in mA */
+    float power;      /**< Power in mW */
+} ina226_data_t;
 
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
-void ina226_main(void *pvParameters);
 
 /**********************
  *      MACROS
@@ -35,4 +39,4 @@ void ina226_main(void *pvParameters);
 } /* extern "C" */
 #endif
 
-#endif /* INA226_H */
+#endif /* SENSOR_DATA_TYPES_H */
