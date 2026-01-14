@@ -6,6 +6,6 @@ cmake_minimum_required(VERSION 3.16)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-set(EXCLUDE_COMPONENTS i2c )
+# set(EXCLUDE_COMPONENTS i2c )
 
 project(hpanel_esp32c3)

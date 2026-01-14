@@ -1,10 +1,10 @@
 /**
- * @file i2c.h
+ * @file bsp.h
  *
  */
 
-#ifndef LV_TEMPL_H
-#define LV_TEMPL_H
+#ifndef BSP_H
+#define BSP_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +25,8 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
+void i2c_init(void);
+void i2c_found_device(void);
 
 /**********************
  *      MACROS
@@ -34,4 +36,4 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-#endif /* LV_TEMPL_H */
+#endif /* BSP_H */
