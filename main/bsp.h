@@ -25,8 +25,7 @@ extern "C" {
 /**********************
  * GLOBAL PROTOTYPES
  **********************/
-void i2c_init(void);
-void i2c_found_device(void);
+void bsp_init(void);
 
 /**********************
  *      MACROS

@@ -56,6 +56,9 @@ void i2c_init(void)
 
 void i2c_found_device(void)
 {
+    i2c_master_bus_handle_t bus_handle;
+    ESP_ERROR_CHECK(i2c_master_get_bus_handle(TEST_I2C_PORT, &bus_handle));
+    
     for (uint16_t addr = 1; addr < 127; addr++) 
     {
         if (i2c_master_probe(bus_handle, addr, 1000) == ESP_OK) {
