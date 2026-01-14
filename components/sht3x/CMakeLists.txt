@@ -12,6 +12,5 @@ idf_component_register(
     PRIV_INCLUDE_DIRS
         "lib"
     REQUIRES
-        driver
         esp_driver_i2c
 )

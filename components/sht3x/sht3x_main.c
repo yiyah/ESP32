@@ -31,7 +31,7 @@ int16_t sht3x_main(void)
     int32_t a_temperature = 0.0;
     int32_t a_humidity = 0.0;
     uint16_t repetition = 0;
-    for (repetition = 0; repetition < 50; repetition++) {
+    for (repetition = 0; repetition < 2; repetition++) {
         error = sht3x_blocking_read_measurement(&a_temperature, &a_humidity);
         if (error != NO_ERROR) {
             printf("error executing blocking_read_measurement(): %i\n", error);
@@ -47,3 +47,37 @@ int16_t sht3x_main(void)
     }
     return NO_ERROR;
 }
+
+// sht3x_i2c_example_usage_single_shot.c
+// int main(void) {
+//     int16_t error = NO_ERROR;
+//     sensirion_i2c_hal_init();
+//     sht3x_init(SHT30_I2C_ADDR_44);
+
+//     sht3x_stop_measurement();
+//     sensirion_hal_sleep_us(1000);
+//     sht3x_soft_reset();
+//     sensirion_hal_sleep_us(100000);
+//     uint16_t a_status_register = 0u;
+//     error = sht3x_read_status_register(&a_status_register);
+//     if (error != NO_ERROR) {
+//         printf("error executing read_status_register(): %i\n", error);
+//         return error;
+//     }
+//     printf("a_status_register: %02x\n", a_status_register);
+//     int32_t a_temperature = 0;
+//     int32_t a_humidity = 0;
+//     uint16_t repetition = 0;
+//     for (repetition = 0; repetition < 50; repetition++) {
+//         error = sht3x_measure_single_shot(REPEATABILITY_MEDIUM, false,
+//                                           &a_temperature, &a_humidity);
+//         if (error != NO_ERROR) {
+//             printf("error executing measure_single_shot(): %i\n", error);
+//             continue;
+//         }
+//         printf("a_temperature  [milli degC]: %i ", a_temperature);
+//         printf("a_humidity  [milli RH]: %i\n", a_humidity);
+//     }
+
+//     return NO_ERROR;
+// }
